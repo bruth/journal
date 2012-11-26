@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ ! -n "$JOURNAL_DIR" ]
+then
+    JOURNAL_DIR="$HOME/Journal"
+fi
+
+TODAYS_DIR="$JOURNAL_DIR/$(date '+%Y')/$(date '+%m')/$(date '+%d')"
+LOGFILE="$TODAYS_DIR/log.md"
+
+# Create a for this day
+mkdir -p $TODAYS_DIR
+
+# Add an timestamp entry to the file, but first check if the file ends with
+# a newline file for proper spacing
+# Reference: http://www.commandlinefu.com/commands/view/6440/function-to-check-whether-a-regular-file-ends-with-a-newline
+if [[ -f "$LOGFILE" && -s "$LOGFILE" && ! -z $(tail -1 "$LOGFILE") ]]
+then
+    echo '' >> "$LOGFILE"
+fi
+
+echo -n -e "-[" `date '+%H:%M:%S'` " - " `hostname` " ]-\n\n\n" >> "$LOGFILE"
+/Applications/MacVim.app/Contents/MacOS/Vim -c 'normal G' -c 'startinsert' "$LOGFILE" -g
