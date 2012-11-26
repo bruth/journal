@@ -1,14 +1,18 @@
 #!/bin/bash
 
-if [ ! -n "$JOURNAL_DIR" ]
+# Check if the variable is empty and set it if so
+if [ ! -n "$JOURNAL" ]
 then
-    JOURNAL_DIR="$HOME/Journal"
+    JOURNAL="$HOME/Journal"
 fi
 
-TODAYS_DIR="$JOURNAL_DIR/$(date '+%Y')/$(date '+%m')/$(date '+%d')"
+# Define today's directory where the log and related files are stored
+TODAYS_DIR="$JOURNAL/$(date '+%Y')/$(date '+%m')/$(date '+%d')"
+
+# Define the main log file
 LOGFILE="$TODAYS_DIR/log.md"
 
-# Create a for this day
+# Ensure the directory for this day is created
 mkdir -p $TODAYS_DIR
 
 # Add an timestamp entry to the file, but first check if the file ends with
@@ -20,4 +24,6 @@ then
 fi
 
 echo -n -e "-[" `date '+%H:%M:%S'` " - " `hostname` " ]-\n\n\n" >> "$LOGFILE"
-/Applications/MacVim.app/Contents/MacOS/Vim -c 'normal G' -c 'startinsert' "$LOGFILE" -g
+
+# Launch the editor to edit the logfile
+$EDITOR "$LOGFILE"
