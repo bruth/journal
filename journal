@@ -12,26 +12,17 @@
 if [ ! -z "$1" ]; then
     JOURNAL="$1"
 elif [ ! -n "$JOURNAL" ]; then
-    JOURNAL="$HOME/Journal"
+    JOURNAL="$HOME/.journal"
 fi
-
-# Define today's directory where the log and related files are stored
-TODAYS_DIR="$JOURNAL/$(date '+%Y')/$(date '+%m')/$(date '+%d')"
-
-# Define the log file for today
-LOGFILE="$TODAYS_DIR/log.md"
-
-# Ensure the directory for this day is created
-mkdir -p $TODAYS_DIR
 
 # Add an timestamp entry to the file, but first check if the file ends with
 # a newline file for proper spacing
 # Reference: http://www.commandlinefu.com/commands/view/6440/function-to-check-whether-a-regular-file-ends-with-a-newline
-if [[ -f "$LOGFILE" && -s "$LOGFILE" && ! -z $(tail -1 "$LOGFILE") ]]; then
-    echo '' >> "$LOGFILE"
+if [[ -f "$JOURNAL" && -s "$JOURNAL" && ! -z $(tail -1 "$JOURNAL") ]]; then
+    echo '' >> "$JOURNAL"
 fi
 
-echo -e "// $(date '+%H:%M')\n\n" >> "$LOGFILE"
+echo -e "// $(date '+%Y-%m-%d @ %H:%M')\n\n" >> "$JOURNAL"
 
 if [ ! -z `which mvim` ]; then
     EDITOR=mvim
@@ -41,4 +32,4 @@ else
     EDITOR=vim
 fi
 
-$EDITOR + -c "startinsert" "$LOGFILE"
+$EDITOR + -c "startinsert" "$JOURNAL"
