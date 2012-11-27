@@ -12,3 +12,18 @@ to the script.
 ```cron
 0,30 8-18 * * mon-fri journal
 ```
+
+Customize the location of the journal by setting the `JOURNAL` environment
+variable or by passing an argument to `journal` directly:
+
+```bash
+JOURNAL=path/to/journal journal
+```
+
+or
+
+```bash
+journal path/to/journal
+```
+
+This enables keeping separate journals for different topics or contexts.

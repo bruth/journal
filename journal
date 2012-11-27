@@ -1,14 +1,24 @@
 #!/bin/bash
+# Add this to your $PATH. This can be used by invoking the `journal`
+# command or with an interval-based approach using cron (or both).
+# To setup a cron job for a 30 minute interval:
+#
+#   0-30 * * * * journal
+# 
+# Original idea from http://www.stochasticgeometry.ie/2012/11/23/vimwiki/
 
-# Check if the variable is empty and set it if so
-if [ ! -n "$JOURNAL" ]; then
+# Check for journal path as an argument, otherwise fallback to the
+# predefined $JOURNAL env or the default
+if [ ! -z "$1" ]; then
+    JOURNAL="$1"
+elif [ ! -n "$JOURNAL" ]; then
     JOURNAL="$HOME/Journal"
 fi
 
 # Define today's directory where the log and related files are stored
 TODAYS_DIR="$JOURNAL/$(date '+%Y')/$(date '+%m')/$(date '+%d')"
 
-# Define the main log file
+# Define the log file for today
 LOGFILE="$TODAYS_DIR/log.md"
 
 # Ensure the directory for this day is created
@@ -22,9 +32,6 @@ if [[ -f "$LOGFILE" && -s "$LOGFILE" && ! -z $(tail -1 "$LOGFILE") ]]; then
 fi
 
 echo -e "// $(date '+%H:%M')\n\n" >> "$LOGFILE"
-
-# Launch the editor to edit the logfile
-PLATFORM=${OSTYPE//[0-9\.]}
 
 if [ ! -z `which mvim` ]; then
     EDITOR=mvim
