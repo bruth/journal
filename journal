@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Check if the variable is empty and set it if so
-if [ ! -n "$JOURNAL" ]
-then
+if [ ! -n "$JOURNAL" ]; then
     JOURNAL="$HOME/Journal"
 fi
 
@@ -18,12 +17,21 @@ mkdir -p $TODAYS_DIR
 # Add an timestamp entry to the file, but first check if the file ends with
 # a newline file for proper spacing
 # Reference: http://www.commandlinefu.com/commands/view/6440/function-to-check-whether-a-regular-file-ends-with-a-newline
-if [[ -f "$LOGFILE" && -s "$LOGFILE" && ! -z $(tail -1 "$LOGFILE") ]]
-then
+if [[ -f "$LOGFILE" && -s "$LOGFILE" && ! -z $(tail -1 "$LOGFILE") ]]; then
     echo '' >> "$LOGFILE"
 fi
 
-echo -n -e "-[" `date '+%H:%M:%S'` " - " `hostname` " ]-\n\n\n" >> "$LOGFILE"
+echo -e "// $(date '+%H:%M')\n\n" >> "$LOGFILE"
 
 # Launch the editor to edit the logfile
-$EDITOR "$LOGFILE"
+PLATFORM=${OSTYPE//[0-9\.]}
+
+if [ ! -z `which mvim` ]; then
+    EDITOR=mvim
+elif [ ! -z `which gvim` ]; then
+    EDITOR=gvim
+else
+    EDITOR=vim
+fi
+
+$EDITOR + -c "startinsert" "$LOGFILE"
