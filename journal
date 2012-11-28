@@ -24,12 +24,10 @@ fi
 
 echo -e "// $(date '+%Y-%m-%d @ %H:%M')\n\n" >> "$JOURNAL"
 
-if [ ! -z `which mvim` ]; then
-    EDITOR=mvim
+if [[ -f "/Applications/MacVim.app/Contents/MacOS/Vim" ]]; then
+    /Applications/MacVim.app/Contents/MacOS/Vim -u "$JOURNAL/.vimrc" + "$LOGFILE" -g
 elif [ ! -z `which gvim` ]; then
-    EDITOR=gvim
+    gvim -u "$JOURNAL/.vimrc" + "$LOGFILE" -g
 else
-    EDITOR=vim
+    vim -u "$JOURNAL/.vimrc" + "$LOGFILE" -g
 fi
-
-$EDITOR + -c "startinsert" "$JOURNAL"
